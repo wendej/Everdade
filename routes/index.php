@@ -5,17 +5,18 @@ use function src\{
 };
 
 use App\Controllers\CursoController;
-use App\Controllers\CadastroController;
+use App\Controllers\UsuarioController;
 
 $app = new \Slim\App(slimConfiguration());
 
 // ==================================================
 $app->get('/cursos', CursoController::class . ':getCursos');
 
-$app->get('/cadastro', CadastroController::class . ':getUsuario');
-$app->post('/cadastro', CadastroController::class . ':insertUsuario');
-$app->put('/cadastro', CadastroController::class . ':updateUsuario');
-$app->delete('/cadastro', CadastroController::class . ':deleteUsuario');
+$app->get('/usuario/seleciona', UsuarioController::class . ':getUsuario');
+$app->post('/usuario/cadastro', UsuarioController::class . ':insertUsuario');
+$app->put('/usuario/atualizar', UsuarioController::class . ':updateUsuario');
+$app->delete('/usuario/apagar', UsuarioController::class . ':deleteUsuario');
+$app->post('/usuario/login', UsuarioController::class . ':loginUsuario');
 // ==================================================
 
 $app->run();

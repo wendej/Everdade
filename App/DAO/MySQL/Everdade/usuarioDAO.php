@@ -4,7 +4,7 @@ namespace App\DAO\MySQL\Everdade;
 
 use App\Model\MySQL\Everdade\UsuarioModel;
 
-class CadastroDAO extends Conexao
+class UsuarioDAO extends Conexao
 {
 	
 	public function __construct()
@@ -15,14 +15,14 @@ class CadastroDAO extends Conexao
 	public function insereUsuario(UsuarioModel $usuario): void
 	{
         $statement = $this->pdo
-            ->prepare('INSERT INTO usuario VALUES(
+            ->prepare("INSERT INTO usuario VALUES(
                 null,
                 :login,
                 :senha,
                 :email,
                 :nome,
                 :tipo
-            );');
+            );");
 
         $statement->execute([
             'login' => $usuario->getLogin(),
@@ -32,4 +32,16 @@ class CadastroDAO extends Conexao
             'tipo' => $usuario->getTipo()
         ]);
 	}
+
+    public function logaUsuario(UsuarioModel $usuario): string
+    {
+        $sql = "SELECT COUNT(*) 
+                FROM usuario 
+                WHERE login = '". $usuario->getLogin() ."' 
+                AND senha = '". $usuario->getSenha() ."'";
+
+        $res = $this->pdo->query($sql);
+
+        return $res->fetchColumn() > 0 ? 'usuário encontrado' : 'usuário não encontrado';
+    }
 }

@@ -4,11 +4,12 @@ namespace App\Controllers;
 
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
-use App\DAO\MySQL\Everdade\cadastroDAO;
+use App\DAO\MySQL\Everdade\usuarioDAO;
 use App\Model\MySQL\Everdade\UsuarioModel;
 
-final class CadastroController
+final class UsuarioController
 {
+	
 	public function getUsuario(Request $request, Response $response, array $args): Response
 	{
 
@@ -17,10 +18,11 @@ final class CadastroController
 	
 	public function insertUsuario(Request $request, Response $response, array $args): Response
 	{
+		$usuarioDAO = new UsuarioDAO();
+		$usuario = new UsuarioModel();
+
 		$data = $request->getParsedBody();
 
-		$usuarioDAO = new CadastroDAO();
-		$usuario = new UsuarioModel();
 		$usuario->setLogin($data['login']);
 		$usuario->setSenha($data['senha']);
 		$usuario->setEmail($data['email']);
@@ -44,6 +46,25 @@ final class CadastroController
 	public function deleteUsuario(Request $request, Response $response, array $args): Response
 	{
 		
+		return $response;
+	}
+
+	public function loginUsuario(Request $request, Response $response, array $args): Response
+	{
+		$usuarioDAO = new UsuarioDAO();
+		$usuario = new UsuarioModel();
+
+		$data = $request->getParsedBody();
+
+		$usuario->setLogin($data['login']);
+		$usuario->setSenha($data['senha']);
+
+		$retorno = $usuarioDAO->logaUsuario($usuario);
+
+		$response = $response->withJson([
+				'message' => $retorno
+			]);
+
 		return $response;
 	}
 
