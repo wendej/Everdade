@@ -22,9 +22,14 @@ class ComposerStaticInita51be518a8ccbe692bf1c653c5ac63fc
         ),
         'P' => 
         array (
+            'Psr\\Log\\' => 8,
             'Psr\\Http\\Server\\' => 16,
             'Psr\\Http\\Message\\' => 17,
             'Psr\\Container\\' => 14,
+        ),
+        'N' => 
+        array (
+            'Neomerx\\Cors\\' => 13,
         ),
         'I' => 
         array (
@@ -44,7 +49,8 @@ class ComposerStaticInita51be518a8ccbe692bf1c653c5ac63fc
         'Tuupola\\Middleware\\' => 
         array (
             0 => __DIR__ . '/..' . '/tuupola/callable-handler/src',
-            1 => __DIR__ . '/..' . '/tuupola/slim-basic-auth/src',
+            1 => __DIR__ . '/..' . '/tuupola/cors-middleware/src',
+            2 => __DIR__ . '/..' . '/tuupola/slim-basic-auth/src',
         ),
         'Tuupola\\Http\\Factory\\' => 
         array (
@@ -53,6 +59,10 @@ class ComposerStaticInita51be518a8ccbe692bf1c653c5ac63fc
         'Slim\\' => 
         array (
             0 => __DIR__ . '/..' . '/slim/slim/Slim',
+        ),
+        'Psr\\Log\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
         ),
         'Psr\\Http\\Server\\' => 
         array (
@@ -67,6 +77,10 @@ class ComposerStaticInita51be518a8ccbe692bf1c653c5ac63fc
         'Psr\\Container\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/container/src',
+        ),
+        'Neomerx\\Cors\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/neomerx/cors-psr7/src',
         ),
         'Interop\\Container\\' => 
         array (
