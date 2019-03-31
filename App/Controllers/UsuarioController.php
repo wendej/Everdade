@@ -25,9 +25,9 @@ final class UsuarioController
 
 		$usuario->setLogin($data['login']);
 		$usuario->setSenha($data['senha']);
-		$usuario->setEmail($data['email']);
-		$usuario->setNome($data['nome']);
 		$usuario->setTipo($data['tipo']);
+		$usuario->setNome($data['nome']);
+		$usuario->setEmail($data['email']);
 
 		$usuarioDAO->insereUsuario($usuario);
 		$response = $response->withJson([
