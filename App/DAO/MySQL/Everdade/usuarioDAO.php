@@ -42,6 +42,6 @@ class UsuarioDAO extends Conexao
 
         $res = $this->pdo->query($sql);
 
-        return $res->fetch();
+        return $res->fetch(\PDO::FETCH_ASSOC);
     }
 }
