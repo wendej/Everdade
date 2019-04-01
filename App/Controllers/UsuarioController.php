@@ -67,7 +67,9 @@ final class UsuarioController
 			]);
 		} else {
 			$response = $response->withJson([
-				$retorno
+				'userData' => [
+					$retorno
+				]
 			]);
 		}
 
