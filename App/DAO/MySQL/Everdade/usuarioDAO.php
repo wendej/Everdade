@@ -19,17 +19,17 @@ class UsuarioDAO extends Conexao
                 null,
                 :login,
                 :senha,
-                :email,
+                :tipo,
                 :nome,
-                :tipo
+                :email                
             );");
 
         $statement->execute([
             'login' => $usuario->getLogin(),
             'senha' => $usuario->getSenha(),
-            'email' => $usuario->getEmail(),
+            'tipo' => $usuario->getTipo(),
             'nome' => $usuario->getNome(),
-            'tipo' => $usuario->getTipo()
+            'email' => $usuario->getEmail()
         ]);
 	}
 
