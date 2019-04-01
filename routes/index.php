@@ -6,6 +6,7 @@ use function src\{
 };
 use Tuupola\Middleware\CorsMiddleware;
 use App\Controllers\CursoController;
+use App\Controllers\UnidadeController;
 use App\Controllers\UsuarioController;
 
 $app = new \Slim\App(slimConfiguration());
@@ -24,6 +25,7 @@ $app->add(function ($req, $res, $next) {
 
 $app->group('', function() use ($app) {
 	$app->get('/cursos', CursoController::class . ':getCursos');
+    $app->get('/unidades', CursoController::class . ':getUnidades');
 	$app->get('/usuario/seleciona', UsuarioController::class . ':getUsuario');
 	$app->post('/usuario/cadastro', UsuarioController::class . ':insertUsuario');
 	$app->put('/usuario/atualizar', UsuarioController::class . ':updateUsuario');
