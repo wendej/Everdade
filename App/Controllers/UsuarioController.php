@@ -61,9 +61,15 @@ final class UsuarioController
 
 		$retorno = $usuarioDAO->logaUsuario($usuario);
 
-		$response = $response->withJson([
-				'message' => $retorno
+		if (empty($retorno)) {
+			$response = $response->withJson([
+				'message' => 'usuário não encontrado'
 			]);
+		} else {
+			$response = $response->withJson([
+				$retorno
+			]);
+		}
 
 		return $response;
 	}

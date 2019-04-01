@@ -33,15 +33,15 @@ class UsuarioDAO extends Conexao
         ]);
 	}
 
-    public function logaUsuario(UsuarioModel $usuario): string
+    public function logaUsuario(UsuarioModel $usuario)
     {
-        $sql = "SELECT COUNT(*) 
+        $sql = "SELECT * 
                 FROM usuario 
                 WHERE login = '". $usuario->getLogin() ."' 
                 AND senha = '". $usuario->getSenha() ."'";
 
         $res = $this->pdo->query($sql);
 
-        return $res->fetchColumn() > 0 ? 'usuário encontrado' : 'usuário não encontrado';
+        return $res->fetch();
     }
 }
