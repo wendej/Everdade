@@ -29,7 +29,7 @@ final class UsuarioController
 		$usuario->setNome($data['nome']);
 		$usuario->setEmail($data['email']);
 
-		$usuarioDAO->insereUsuario($usuario);
+		$usuarioDAO->insereUsuario($usuario, $data['idCurso']);
 		$response = $response->withJson([
 			'message' => 'USUÁRIO CADASTRADO COM SUCESSO!'
 		]);

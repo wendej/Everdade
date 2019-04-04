@@ -12,7 +12,7 @@ class UsuarioDAO extends Conexao
 		parent::__construct();
 	}
 
-	public function insereUsuario(UsuarioModel $usuario): void
+	public function insereUsuario(UsuarioModel $usuario, $idCurso): void
 	{
         $statement = $this->pdo
             ->prepare("INSERT INTO usuario VALUES(
@@ -31,6 +31,36 @@ class UsuarioDAO extends Conexao
             'nome' => $usuario->getNome(),
             'email' => $usuario->getEmail()
         ]);
+
+        $id = selecionaMaiorId();
+
+        if ($usuario->getTipo() === 'aluno') {
+            $sql = $this->pdo
+            ->prepare("INSERT INTO aluno VALUES(
+                null,
+                :id_curso,
+                :id_usuario             
+            );");
+
+            $sql->execute([
+                null,
+                $idCurso,
+                $id
+            ]);
+
+        } else {
+            $sql = $this->pdo
+            ->prepare("INSERT INTO professor VALUES(
+                null,
+                :id_usuario             
+            );");
+
+            $sql->execute([
+                null,
+                $id
+            ]);
+        }
+
 	}
 
     public function logaUsuario(UsuarioModel $usuario)
@@ -39,6 +69,16 @@ class UsuarioDAO extends Conexao
                 FROM usuario 
                 WHERE login = '". $usuario->getLogin() ."' 
                 AND senha = '". $usuario->getSenha() ."'";
+
+        $res = $this->pdo->query($sql);
+
+        return $res->fetch(\PDO::FETCH_ASSOC);
+    }
+
+    public function selecionaMaiorId():int
+    {
+        $sql = "SELECT MAX(id_usuario) AS ultimo_id
+                FROM usuario";
 
         $res = $this->pdo->query($sql);
 

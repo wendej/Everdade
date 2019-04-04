@@ -25,6 +25,7 @@ $app->add(function ($req, $res, $next) {
 
 $app->group('', function() use ($app) {
 	$app->get('/cursos', CursoController::class . ':getCursos');
+    $app->get('/cursos/alunos', CursoController::class . ':getAlunosCursos');
     $app->get('/unidades', UnidadeController::class . ':getUnidades');
 	$app->get('/usuario/seleciona', UsuarioController::class . ':getUsuario');
 	$app->post('/usuario/cadastro', UsuarioController::class . ':insertUsuario');

@@ -17,4 +17,22 @@ final class CursoController
 		return $response;
 	}
 
+	public function getAlunosCursos(Request $request, Response $response, array $args): Response
+	{
+		$cursosDAO = New cursosDAO();
+		$data = $request->getParsedBody();
+		$alunosCurso = $cursosDAO->selecionaAlunosCurso($data['idCurso']);
+
+		if (empty($alunosCurso)) {
+			$response = $response->withStatus(403);
+			$response = $response->withJson([
+			'message' => 'Não há alunos cadastrados para este curso!'
+			]);
+		} else {
+			$response = $response->withJson($alunosCurso);
+		}
+		
+		return $response;
+	}
+
 }
