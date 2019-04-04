@@ -25,7 +25,7 @@ $app->add(function ($req, $res, $next) {
 
 $app->group('', function() use ($app) {
 	$app->get('/cursos', CursoController::class . ':getCursos');
-    $app->get('/unidades', CursoController::class . ':getUnidades');
+    $app->get('/unidades', UnidadeController::class . ':getUnidades');
 	$app->get('/usuario/seleciona', UsuarioController::class . ':getUsuario');
 	$app->post('/usuario/cadastro', UsuarioController::class . ':insertUsuario');
 	$app->put('/usuario/atualizar', UsuarioController::class . ':updateUsuario');
