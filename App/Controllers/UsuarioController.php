@@ -29,11 +29,26 @@ final class UsuarioController
 		$usuario->setNome($data['nome']);
 		$usuario->setEmail($data['email']);
 
-		$usuarioDAO->insereUsuario($usuario, $data['idCurso']);
-		$response = $response->withJson([
-			'message' => 'USUÁRIO CADASTRADO COM SUCESSO!'
-		]);
+		if (empty($usuarioDAO->validaLoginUsuario($usuario))) {
+			$usuarioDAO->insereUsuario($usuario, $data['idCurso']);
+			$idUsuario = $usuarioDAO->selecionaMaiorId();
 
+			if ($usuario->getTipo() == 'aluno') {
+				$usuarioDAO->insereAluno($data['idCurso'], $idUsuario['id']);
+			} else {
+				$usuarioDAO->insereProfessor($idUsuario['id']);
+			}
+
+			$response = $response->withJson([
+				'message' => 'Usuário cadastrado com sucesso'
+			]);
+		} else {
+			$response = $response->withStatus(403);
+			$response = $response->withJson([
+				'message' => 'Login já cadastrado'
+			]);
+		}
+		
 		return $response;
 	}
 
