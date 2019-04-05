@@ -26,7 +26,7 @@ final class CursoController
 		if (empty($alunosCurso)) {
 			$response = $response->withStatus(403);
 			$response = $response->withJson([
-			'message' => 'Não há alunos cadastrados para este curso!'
+				'message' => 'Não há alunos cadastrados para este curso!'
 			]);
 		} else {
 			$response = $response->withJson($alunosCurso);

@@ -22,7 +22,6 @@ class CursosDAO extends Conexao
 
 	public function selecionaAlunosCurso($idCurso): array
 	{
-		
 		$alunos = $this->pdo
 			->query('
 				SELECT nome 

@@ -6,7 +6,7 @@ use App\Model\MySQL\Everdade\UsuarioModel;
 
 class UsuarioDAO extends Conexao
 {
-	
+    
 	public function __construct()
 	{
 		parent::__construct();
@@ -32,32 +32,32 @@ class UsuarioDAO extends Conexao
             'email' => $usuario->getEmail()
         ]);
 
-        $id = selecionaMaiorId();
+        $queryId = "SELECT MAX(id_usuario) AS id FROM usuario";
+        $id = $this->pdo->query($queryId);
+        $id = $id->fetch(\PDO::FETCH_ASSOC);
 
-        if ($usuario->getTipo() === 'aluno') {
+        if ($usuario->getTipo() == 'aluno') {
             $sql = $this->pdo
             ->prepare("INSERT INTO aluno VALUES(
                 null,
-                :id_curso,
-                :id_usuario             
+                :curso_id_curso1,
+                :usuario_id_usuario1             
             );");
 
             $sql->execute([
-                null,
-                $idCurso,
-                $id
+                'curso_id_curso1' => $idCurso,
+                'usuario_id_usuario1' => $id['id']
             ]);
 
         } else {
             $sql = $this->pdo
             ->prepare("INSERT INTO professor VALUES(
                 null,
-                :id_usuario             
+                :usuario_id_usuario             
             );");
 
             $sql->execute([
-                null,
-                $id
+                'usuario_id_usuario' => $id['id']
             ]);
         }
 
@@ -77,11 +77,6 @@ class UsuarioDAO extends Conexao
 
     public function selecionaMaiorId():int
     {
-        $sql = "SELECT MAX(id_usuario) AS ultimo_id
-                FROM usuario";
-
-        $res = $this->pdo->query($sql);
-
-        return $res->fetch(\PDO::FETCH_ASSOC);
+        
     }
 }
