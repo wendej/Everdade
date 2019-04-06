@@ -24,7 +24,7 @@ class CursosDAO extends Conexao
 	{
 		$alunos = $this->pdo
 			->query("
-				SELECT nome 
+				SELECT aluno.id_aluno, nome 
 				FROM usuario 
 				INNER JOIN aluno ON aluno.usuario_id_usuario1 = usuario.id_usuario 
 				WHERE aluno.curso_id_curso1 =  ".$idCurso.";")

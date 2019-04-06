@@ -38,7 +38,13 @@ final class turmaController
 		$turma->setNome($data['nome']);
 		$turma->setDisciplina($data['disciplina']);
 
-		$turmaDAO->insereTurma($turma, $data['idProfessor']);
+		$turmaDAO->insereTurma($turma, $data);
+
+		$idTurma = $turmaDAO->selecionaMaiorId();
+
+		foreach ($data['alunos'] as $idAluno) {
+			$turmaDAO->insereAlunoTurma($idAluno, $idTurma['id']);
+		}
 
 		$response = $response->withJson([
 			'message' => 'Turma cadastrada com sucesso'
@@ -57,7 +63,7 @@ final class turmaController
 		$turma->setNome($data['nome']);
 		$turma->setDisciplina($data['disciplina']);
 
-		$turmaDAO->atualizaTurma($turma, $data['idTurma']);
+		$turmaDAO->atualizaTurma($turma, $data);
 
 		$response = $response->withJson([
 			'message' => 'Turma atualizada com sucesso'
