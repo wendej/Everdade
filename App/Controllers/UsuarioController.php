@@ -32,7 +32,7 @@ final class UsuarioController
 		if (empty($usuarioDAO->validaLoginUsuario($usuario))) {
 			$usuarioDAO->insereUsuario($usuario, $data['idCurso']);
 			$idUsuario = $usuarioDAO->selecionaMaiorId();
-
+			
 			if ($usuario->getTipo() == 'aluno') {
 				$usuarioDAO->insereAluno($data['idCurso'], $idUsuario['id']);
 			} else {
@@ -48,7 +48,7 @@ final class UsuarioController
 				'message' => 'Login já cadastrado'
 			]);
 		}
-		
+
 		return $response;
 	}
 

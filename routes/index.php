@@ -8,6 +8,7 @@ use Tuupola\Middleware\CorsMiddleware;
 use App\Controllers\CursoController;
 use App\Controllers\UnidadeController;
 use App\Controllers\UsuarioController;
+use App\Controllers\TurmaController;
 
 $app = new \Slim\App(slimConfiguration());
 
@@ -24,14 +25,26 @@ $app->add(function ($req, $res, $next) {
 });
 
 $app->group('', function() use ($app) {
+
+    /* Curso */
 	$app->get('/cursos', CursoController::class . ':getCursos');
     $app->get('/cursos/alunos', CursoController::class . ':getAlunosCursos');
+
+    /* Unidade */
     $app->get('/unidades', UnidadeController::class . ':getUnidades');
+
+    /* Usuário */
 	$app->get('/usuario/seleciona', UsuarioController::class . ':getUsuario');
 	$app->post('/usuario/cadastro', UsuarioController::class . ':insertUsuario');
 	$app->put('/usuario/atualizar', UsuarioController::class . ':updateUsuario');
 	$app->delete('/usuario/apagar', UsuarioController::class . ':deleteUsuario');
-	$app->post('/usuario/login', UsuarioController::class . ':loginUsuario');
+    $app->post('/usuario/login', UsuarioController::class . ':loginUsuario');
+
+    /* Turma */
+    $app->get('/turma', TurmaController::class . ':getAllTurmas');
+    $app->get('/turma/seleciona', TurmaController::class . ':getTurma');
+	$app->post('/turma/cadastro', TurmaController::class . ':insertTurma');
+    $app->put('/turma/editar', TurmaController::class . ':updateTurma');
 });
 
 $app->run();

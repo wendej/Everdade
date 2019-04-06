@@ -20,7 +20,7 @@ final class CursoController
 	public function getAlunosCursos(Request $request, Response $response, array $args): Response
 	{
 		$cursosDAO = New cursosDAO();
-		$data = $request->getParsedBody();
+		$data = $request->getQueryParams();
 		$alunosCurso = $cursosDAO->selecionaAlunosCurso($data['idCurso']);
 
 		if (empty($alunosCurso)) {
