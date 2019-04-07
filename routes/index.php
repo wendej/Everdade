@@ -9,6 +9,7 @@ use App\Controllers\CursoController;
 use App\Controllers\UnidadeController;
 use App\Controllers\UsuarioController;
 use App\Controllers\TurmaController;
+use App\Controllers\JfController;
 
 $app = new \Slim\App(slimConfiguration());
 
@@ -45,6 +46,12 @@ $app->group('', function() use ($app) {
     $app->get('/turma/seleciona', TurmaController::class . ':getTurma');
 	$app->post('/turma/cadastro', TurmaController::class . ':insertTurma');
     $app->put('/turma/editar', TurmaController::class . ':updateTurma');
+
+    /* JF */
+    $app->get('/jf', JfController::class . ':getAllJfs');
+    $app->get('/jf/seleciona', JfController::class . ':getJf');
+    $app->post('/jf/cadastro', JfController::class . ':insertJf');
+    $app->put('/jf/editar', JfController::class . ':updateJf');
 });
 
 $app->run();
