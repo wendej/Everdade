@@ -14,12 +14,26 @@ class TurmaDAO extends Conexao
 
     public function selecionaTurma($idTurma): array
     {
-        
         $turma = $this->pdo
-            ->query("SELECT * FROM turma WHERE id_turma = ".$idTurma.";")
+            ->query("SELECT * 
+                    FROM turma 
+                    WHERE id_turma = ".$idTurma.";")
             ->fetchAll(\PDO::FETCH_ASSOC);
 
         return $turma;
+    }
+
+    public function selecionaAlunosTurma($idTurma)
+    {
+        $alunosTurma = $this->pdo
+            ->query("SELECT aluno.id_aluno, usuario.nome
+                    FROM  aluno_has_turma
+                    INNER JOIN aluno ON aluno.id_aluno = aluno_has_turma.aluno_id_aluno
+                    INNER JOIN usuario ON aluno.usuario_id_usuario1 = usuario.id_usuario
+                    WHERE aluno_has_turma.turma_id_turma = ".$idTurma.";")
+            ->fetchAll(\PDO::FETCH_ASSOC);
+
+        return $alunosTurma;
     }
 
     public function selecionaTodasTurmas(): array

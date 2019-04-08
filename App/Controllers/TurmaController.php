@@ -22,7 +22,8 @@ final class turmaController
 				'message' => 'Turma não encontrada'
 			]);
 		} else {
-			$response = $response->withJson($turma);
+			$alunosTurma = $turmaDAO->selecionaAlunosTurma($data['idTurma']);
+			$response = $response->withJson(['turma' => $turma, 'alunos' => $alunosTurma]);
 		}
 
 		return $response;

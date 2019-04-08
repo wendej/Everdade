@@ -2,7 +2,7 @@
 
 putenv('DISPLAY_ERRORS_DETAILS=' . true);
 
-putenv('DB_EVERDADE_MYSQL_HOST=localhost');
+putenv('DB_EVERDADE_MYSQL_HOST=127.0.0.1');
 putenv('DB_EVERDADE_MYSQL_DBNAME=bd_everdade');
 putenv('DB_EVERDADE_MYSQL_USER=root');
 putenv('DB_EVERDADE_MYSQL_PASSWORD=');
