@@ -65,9 +65,21 @@ class TurmaDAO extends Conexao
             ->fetchAll(\PDO::FETCH_ASSOC);
 
         if ($tipoUsuario[0]['tipo'] == 'aluno') {
-            return $turma->selecionaTurmasAluno($idUsuario);
+
+            $aluno = $this->pdo
+                ->query("SELECT id_aluno AS id FROM aluno WHERE usuario_id_usuario1 = ".$idUsuario.";")
+                ->fetchAll(\PDO::FETCH_ASSOC);
+
+            return $turma->selecionaTurmasAluno($aluno[0]['id']);
+
         } elseif ($tipoUsuario[0]['tipo'] == 'professor') {
-            return $turma->selecionaTurmasProfessor($idUsuario);
+
+            $professor = $this->pdo
+                ->query("SELECT id_professor AS id FROM professor WHERE usuario_id_usuario = ".$idUsuario.";")
+                ->fetchAll(\PDO::FETCH_ASSOC);
+                
+            return $turma->selecionaTurmasProfessor($professor[0]['id']);
+
         } else {
             return "";
         }
