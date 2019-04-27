@@ -83,7 +83,7 @@ final class turmaController
 	{
 		$turmaDAO = New turmaDAO();
 		$data = $request->getQueryParams();
-		$turmas = $turmaDAO->selecionaTodasTurmas();
+		$turmas = $turmaDAO->selecionaTodasTurmas($data["idUsuario"]);
 
 		if (empty($turmas)) {
 			$response = $response->withStatus(403);
