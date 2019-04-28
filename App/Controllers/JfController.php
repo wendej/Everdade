@@ -70,6 +70,21 @@ final class jfController
 
 	public function deleteJf(Request $request, Response $response, array $args): Response
 	{
+		$jfDAO = new JfDAO();
+		$data = $request->getQueryParams();
+		$jf = $jfDAO->selecionaJf($data['idJf']);
+
+		if (!empty($jf)) {
+			$jfDAO->deletaJf($data['idJf']);
+			$response = $response->withJson([
+				'message' => 'Jf deletado com sucesso.'
+			]);
+		} else {
+			$response = $response->withStatus(403);
+			$response = $response->withJson([
+				'message' => 'Jf não encontrado.'
+			]);
+		}
 
 		return $response;
 	}

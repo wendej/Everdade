@@ -46,12 +46,14 @@ $app->group('', function() use ($app) {
     $app->get('/turma/seleciona', TurmaController::class . ':getTurma');
 	$app->post('/turma/cadastro', TurmaController::class . ':insertTurma');
     $app->put('/turma/editar', TurmaController::class . ':updateTurma');
+    $app->delete('/turma/apagar', TurmaController::class . ':deleteTurma');
 
     /* JF */
     $app->get('/jf', JfController::class . ':getAllJfs');
     $app->get('/jf/seleciona', JfController::class . ':getJf');
     $app->post('/jf/cadastro', JfController::class . ':insertJf');
     $app->put('/jf/editar', JfController::class . ':updateJf');
+    $app->delete('/jf/apagar', JfController::class . ':deleteJf');
 });
 
 $app->run();

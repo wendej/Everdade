@@ -75,7 +75,22 @@ final class turmaController
 
 	public function deleteTurma(Request $request, Response $response, array $args): Response
 	{
+		$turmaDAO = new TurmaDAO();
+		$data = $request->getQueryParams();
+		$turma = $turmaDAO->selecionaTurma($data['idTurma']);
 
+		if (!empty($turma)) {
+			$turmaDAO->deletaTurma($data['idTurma']);
+			$response = $response->withJson([
+				'message' => 'Turma deletada com sucesso'
+			]);
+		} else {
+			$response = $response->withStatus(403);
+			$response = $response->withJson([
+				'message' => 'Turma não encontrada.'
+			]);
+		}
+		
 		return $response;
 	}
 

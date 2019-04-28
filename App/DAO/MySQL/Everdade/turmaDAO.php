@@ -15,9 +15,11 @@ class TurmaDAO extends Conexao
     public function selecionaTurma($idTurma): array
     {
         $turma = $this->pdo
-            ->query("SELECT * 
-                    FROM turma 
-                    WHERE id_turma = ".$idTurma.";")
+            ->query("SELECT turma.*, unidade.nome AS unidade, curso.nome AS curso
+                    FROM turma
+                    INNER JOIN unidade ON turma.unidade_id_unidade = unidade.id_unidade
+                    INNER JOIN curso ON turma.curso_id_curso = curso.id_curso
+                    WHERE turma.id_turma = ".$idTurma.";")
             ->fetchAll(\PDO::FETCH_ASSOC);
 
         return $turma;
@@ -142,6 +144,28 @@ class TurmaDAO extends Conexao
         $statement->execute([
             'aluno_id_aluno' => $idAluno,
             'turma_id_turma' => $idTurma
+        ]);
+    }
+
+    public function deletaTurma($idTurma): void
+    {
+        $jf = $this->pdo
+            ->prepare("DELETE FROM julgamento_de_fatos WHERE turma_id_turma1 = :turma_id_turma1;");
+        $jf->execute([
+            'turma_id_turma1' => $idTurma
+        ]);
+
+        $alunosTurma = $this->pdo
+            ->prepare("DELETE FROM aluno_has_turma WHERE turma_id_turma = :turma_id_turma;");
+        $alunosTurma->execute([
+            'turma_id_turma' => $idTurma
+        ]);
+
+        $turma = $this->pdo
+            ->prepare("DELETE FROM turma WHERE id_turma = :id_turma;");
+
+        $turma->execute([
+            'id_turma' => $idTurma
         ]);
     }
 }
