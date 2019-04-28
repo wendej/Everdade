@@ -110,6 +110,34 @@ class TurmaDAO extends Conexao
 
     public function atualizaTurma(TurmaModel $turma, $data): void
     {
+        $objTurma = new TurmaDAO();
+        $alunosTurmaAtual = $objTurma->selecionaAlunosTurma($data['idTurma']);
+        $idAlunosAtuais = array();
+
+        if (!empty($alunosTurmaAtual)) {
+
+            foreach ($alunosTurmaAtual as $aluno) {
+                $idAlunosAtuais[] = $aluno['id_aluno'];
+            }
+        }
+
+        $idAlunosNovos = $data['alunos'];
+
+        $alunosEntraram = array_diff($idAlunosNovos, $idAlunosAtuais);
+        $alunosSairam = array_diff($idAlunosAtuais, $idAlunosNovos);
+
+        if (!empty($alunosEntraram)) {
+            foreach ($alunosEntraram as $aluno) {
+                $objTurma->insereAlunoTurma($aluno, $data['idTurma']);
+            }  
+        }
+
+        if (!empty($alunosSairam)) {
+            foreach ($alunosSairam as $aluno) {
+                $objTurma->deletaAlunoTurma($aluno, $data['idTurma']);
+            } 
+        }
+
         $statement = $this->pdo
             ->prepare("UPDATE turma SET
                 nome = ?,
@@ -144,6 +172,16 @@ class TurmaDAO extends Conexao
         $statement->execute([
             'aluno_id_aluno' => $idAluno,
             'turma_id_turma' => $idTurma
+        ]);
+    }
+
+    public function deletaAlunoTurma($idAluno, $idTurma): void
+    {
+        $alunosTurma = $this->pdo
+            ->prepare("DELETE FROM aluno_has_turma WHERE turma_id_turma = :turma_id_turma AND aluno_id_aluno = :aluno_id_aluno;");
+        $alunosTurma->execute([
+            'turma_id_turma' => $idTurma,
+            'aluno_id_aluno' => $idAluno
         ]);
     }
 

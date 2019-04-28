@@ -60,7 +60,7 @@ final class turmaController
 		$turma = new TurmaModel();
 
 		$data = $request->getParsedBody();
-
+		
 		$turma->setNome($data['nome']);
 		$turma->setDisciplina($data['disciplina']);
 
