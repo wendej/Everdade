@@ -45,7 +45,7 @@ final class jfController
 		$idJf = $jfDAO->selecionaMaiorId();
 
 		foreach ($data['fatos'] as $fato) {
-			$jfDAO->insereFato($idJf['id'], $fato);
+			$jfDAO->insereFato($idJf['id'], $fato, $data['idTurma']);
 		}
 
 		$response = $response->withJson([

@@ -98,7 +98,7 @@ class JfDAO extends Conexao
         return $id->fetch(\PDO::FETCH_ASSOC);
     }
 
-    public function insereFato($idJf, $fato): void
+    public function insereFato($idJf, $fato, $idTurma): void
     {
         $statement = $this->pdo
             ->prepare("INSERT INTO fato VALUES(
@@ -117,7 +117,7 @@ class JfDAO extends Conexao
             'topico' => $fato['topico'],
             'resposta_correta' => $fato['respostaCorreta'],
             'julgamento_de_fatos_id_jf' => $idJf,
-            'julgamento_de_fatos_turma_id_turma' => $fato['turmaJf']
+            'julgamento_de_fatos_turma_id_turma' => $idTurma
         ]);
     }
 }

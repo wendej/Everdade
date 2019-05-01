@@ -5,6 +5,7 @@ namespace App\Controllers;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use App\DAO\MySQL\Everdade\turmaDAO;
+use App\DAO\MySQL\Everdade\jfDAO;
 use App\Model\MySQL\Everdade\TurmaModel;
 
 final class turmaController
@@ -13,6 +14,7 @@ final class turmaController
 	public function getTurma(Request $request, Response $response, array $args): Response
 	{
 		$turmaDAO = New turmaDAO();
+		$jfDAO = New jfDAO();
 		$data = $request->getQueryParams();
 		$turma = $turmaDAO->selecionaTurma($data['idTurma']);
 
@@ -23,7 +25,8 @@ final class turmaController
 			]);
 		} else {
 			$alunosTurma = $turmaDAO->selecionaAlunosTurma($data['idTurma']);
-			$response = $response->withJson(['turma' => $turma, 'alunos' => $alunosTurma]);
+			$jfTurma = $jfDAO->selecionaTodosJfs($data['idTurma']);
+			$response = $response->withJson(['turma' => $turma, 'alunos' => $alunosTurma, 'JFs' => $jfTurma]);
 		}
 
 		return $response;
