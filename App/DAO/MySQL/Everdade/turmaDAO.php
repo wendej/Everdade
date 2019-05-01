@@ -59,6 +59,13 @@ class TurmaDAO extends Conexao
         return $turmas;
     }
 
+    public function selecionaProfessor($idUsuario)
+    {
+        return $professor = $this->pdo
+                ->query("SELECT id_professor AS id FROM professor WHERE usuario_id_usuario = ".$idUsuario.";")
+                ->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
     public function selecionaTodasTurmas($idUsuario)
     {  
         $turma = new TurmaDAO();
@@ -76,9 +83,7 @@ class TurmaDAO extends Conexao
 
         } elseif ($tipoUsuario[0]['tipo'] == 'professor') {
 
-            $professor = $this->pdo
-                ->query("SELECT id_professor AS id FROM professor WHERE usuario_id_usuario = ".$idUsuario.";")
-                ->fetchAll(\PDO::FETCH_ASSOC);
+            $professor = $turma->selecionaProfessor($idUsuario);
                 
             return $turma->selecionaTurmasProfessor($professor[0]['id']);
 
@@ -89,6 +94,9 @@ class TurmaDAO extends Conexao
 
 	public function insereTurma(TurmaModel $turma, $data): void
 	{
+        $objTurma = new TurmaDAO();
+        $idProfessor = $objTurma->selecionaProfessor($data['idUsuario']);
+
         $statement = $this->pdo
             ->prepare("INSERT INTO turma VALUES(
                 null,
@@ -102,7 +110,7 @@ class TurmaDAO extends Conexao
         $statement->execute([
             'nome' => $turma->getNome(),
             'disciplina' => $turma->getDisciplina(),
-            'professor_id_professor' => $data['idProfessor'],
+            'professor_id_professor' => $idProfessor[0]['id'],
             'unidade_id_unidade' => $data['idUnidade'],
             'curso_id_curso' => $data['idCurso']
         ]);
@@ -113,15 +121,13 @@ class TurmaDAO extends Conexao
         $objTurma = new TurmaDAO();
         $alunosTurmaAtual = $objTurma->selecionaAlunosTurma($data['idTurma']);
         $idAlunosAtuais = array();
+        $idAlunosNovos = $data['alunos'];
 
         if (!empty($alunosTurmaAtual)) {
-
             foreach ($alunosTurmaAtual as $aluno) {
                 $idAlunosAtuais[] = $aluno['id_aluno'];
             }
         }
-
-        $idAlunosNovos = $data['alunos'];
 
         $alunosEntraram = array_diff($idAlunosNovos, $idAlunosAtuais);
         $alunosSairam = array_diff($idAlunosAtuais, $idAlunosNovos);
