@@ -38,8 +38,15 @@ final class jfController
 		$jf->setNome($data['nome']);
 		$jf->setTempoMaxExib($data['tempoMaxExib']);
 		$jf->setStatus($data['status']);
+		$jf->setQuantidadeMaxAlunosEquipe($data['qntMaxAlunosEquipe']);
 
-		$jfDAO->inserejf($jf, $data);
+		$jfDAO->insereJf($jf, $data);
+
+		$idJf = $jfDAO->selecionaMaiorId();
+
+		foreach ($data['fatos'] as $fato) {
+			$jfDAO->insereFato($idJf['id'], $fato);
+		}
 
 		$response = $response->withJson([
 			'message' => 'JF cadastrado com sucesso'
@@ -58,6 +65,7 @@ final class jfController
 		$jf->setNome($data['nome']);
 		$jf->setTempoMaxExib($data['tempoMaxExib']);
 		$jf->setStatus($data['status']);
+		$jf->setQuantidadeMaxAlunosEquipe($data['qntMaxAlunosEquipe']);
 
 		$jfDAO->atualizajf($jf, $data);
 

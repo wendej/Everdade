@@ -9,6 +9,7 @@ final class JfModel
     private $nome;
     private $tempoMaxExib;
     private $status;
+    private $qntMaxAlunosEquipe;
 
     public function getIdJf(): int
     {
@@ -31,6 +32,15 @@ final class JfModel
     public function setTempoMaxExib(string $tempoMaxExib): void
     {
         $this->tempoMaxExib = $tempoMaxExib;
+    }
+
+    public function getQuantidadeMaxAlunosEquipe(): string
+    {
+        return $this->qntMaxAlunosEquipe;
+    }
+    public function setQuantidadeMaxAlunosEquipe(string $qntMaxAlunosEquipe): void
+    {
+        $this->qntMaxAlunosEquipe = $qntMaxAlunosEquipe;
     }
 
     public function getStatus(): string
