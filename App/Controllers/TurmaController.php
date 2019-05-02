@@ -104,7 +104,7 @@ final class turmaController
 		$turmas = $turmaDAO->selecionaTodasTurmas($data["idUsuario"]);
 
 		if (empty($turmas)) {
-			$response = $response->withStatus(403);
+			$response = $response->withStatus(200);
 			$response = $response->withJson([
 				'message' => 'Nenhuma turma encontrada'
 			]);

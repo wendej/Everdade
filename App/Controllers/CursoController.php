@@ -24,7 +24,7 @@ final class CursoController
 		$alunosCurso = $cursosDAO->selecionaAlunosCurso($data['idCurso']);
 
 		if (empty($alunosCurso)) {
-			$response = $response->withStatus(403);
+			$response = $response->withStatus(200);
 			$response = $response->withJson([
 				'message' => 'Não há alunos cadastrados para este curso!'
 			]);
