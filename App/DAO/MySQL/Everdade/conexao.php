@@ -18,14 +18,13 @@ abstract class Conexao
 		$pass = getenv('DB_EVERDADE_MYSQL_PASSWORD');
 		$dbname = getenv('DB_EVERDADE_MYSQL_DBNAME');
 
-		$dsn = "mysql:host={$host};dbname={$dbname};port={$port}";
+		$dsn = "mysql:host={$host};dbname={$dbname};port={$port};charset=utf8";
 
 		$this->pdo = new \PDO($dsn, $user, $pass);
 		$this->pdo->setAttribute(
 			\PDO::ATTR_ERRMODE,
 			\PDO::ERRMODE_EXCEPTION
 		);
-		$this->pdo->set_charset("utf8");
 	}
 
 }

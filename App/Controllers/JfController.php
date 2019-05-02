@@ -72,7 +72,7 @@ final class jfController
 		$jfDAO->deletaFatosJf($data['idJf']);
 
 		foreach ($data['fatos'] as $fato) {
-			$jfDAO->insereFato($idJf['id'], $fato, $data['idTurma']);
+			$jfDAO->insereFato($data['idJf'], $fato, $data['idTurma']);
 		}
 		
 		$response = $response->withJson([

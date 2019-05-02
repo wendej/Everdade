@@ -75,7 +75,7 @@ class JfDAO extends Conexao
         $statement->execute([
             $Jf->getNome(),
             $Jf->getTempoMaxExib(),
-            $Jf->getQuantidadeAlunosEquipe(),
+            $Jf->getQuantidadeMaxAlunosEquipe(),
             $Jf->getStatus()
         ]);
     }
