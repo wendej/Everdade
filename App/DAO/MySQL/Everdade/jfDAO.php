@@ -22,6 +22,16 @@ class JfDAO extends Conexao
         return $Jf;
     }
 
+    public function selecionaFatosJf($idJf): array
+    {
+        
+        $Jf = $this->pdo
+            ->query("SELECT * FROM fato WHERE julgamento_de_fatos_id_jf = ".$idJf.";")
+            ->fetchAll(\PDO::FETCH_ASSOC);
+
+        return $Jf;
+    }
+
     public function selecionaTodosJfs($idTurma): array
     {  
         $Jf = $this->pdo

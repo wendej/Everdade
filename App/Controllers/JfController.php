@@ -14,7 +14,8 @@ final class jfController
 	{
 		$jfDAO = New jfDAO();
 		$data = $request->getQueryParams();
-		$jf = $jfDAO->selecionajf($data['idJf']);
+		$jf = $jfDAO->selecionaJf($data['idJf']);
+		$fatosJf = $jfDAO->selecionaFatosJf($data['idJf']);
 
 		if (empty($jf)) {
 			$response = $response->withStatus(403);
@@ -22,7 +23,7 @@ final class jfController
 				'message' => 'JF não encontrado'
 			]);
 		} else {
-			$response = $response->withJson($jf);
+			$response = $response->withJson(['jf' => $jf, 'fatos' => $fatosJf]);
 		}
 
 		return $response;
@@ -67,7 +68,7 @@ final class jfController
 		$jf->setStatus($data['status']);
 		$jf->setQuantidadeMaxAlunosEquipe($data['qntMaxAlunosEquipe']);
 
-		$jfDAO->atualizajf($jf, $data);
+		$jfDAO->atualizaJf($jf, $data);
 
 		$response = $response->withJson([
 			'message' => 'JF atualizado com sucesso'
