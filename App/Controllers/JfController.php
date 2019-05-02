@@ -69,7 +69,12 @@ final class jfController
 		$jf->setQuantidadeMaxAlunosEquipe($data['qntMaxAlunosEquipe']);
 
 		$jfDAO->atualizaJf($jf, $data);
+		$jfDAO->deletaFatosJf($data['idJf']);
 
+		foreach ($data['fatos'] as $fato) {
+			$jfDAO->insereFato($idJf['id'], $fato, $data['idTurma']);
+		}
+		
 		$response = $response->withJson([
 			'message' => 'JF atualizado com sucesso'
 		]);

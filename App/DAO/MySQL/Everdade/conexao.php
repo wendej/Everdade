@@ -25,6 +25,7 @@ abstract class Conexao
 			\PDO::ATTR_ERRMODE,
 			\PDO::ERRMODE_EXCEPTION
 		);
+		$this->pdo->set_charset("utf8");
 	}
 
 }

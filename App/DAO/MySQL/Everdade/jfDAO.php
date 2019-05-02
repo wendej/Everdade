@@ -80,6 +80,15 @@ class JfDAO extends Conexao
         ]);
     }
 
+    public function deletaFatosJf($idJf)
+    {
+        $fatoJf = $this->pdo
+            ->prepare("DELETE FROM fato WHERE julgamento_de_fatos_id_jf = :julgamento_de_fatos_id_jf;");
+        $fatoJf->execute([
+            'julgamento_de_fatos_id_jf' => $idJf
+        ]);
+    }
+
     public function deletaJf($idJf): void
     {
         $equipeJf = $this->pdo
