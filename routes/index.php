@@ -10,6 +10,7 @@ use App\Controllers\UnidadeController;
 use App\Controllers\UsuarioController;
 use App\Controllers\TurmaController;
 use App\Controllers\JfController;
+use App\Controllers\EquipeController;
 
 $app = new \Slim\App(slimConfiguration());
 
@@ -54,6 +55,13 @@ $app->group('', function() use ($app) {
     $app->post('/jf/cadastrar', JfController::class . ':insertJf');
     $app->put('/jf/editar', JfController::class . ':updateJf');
     $app->delete('/jf/apagar', JfController::class . ':deleteJf');
+
+    /* Equipe */
+    $app->get('/equipe', EquipeController::class . ':getEquipe');
+    $app->get('/equipe/selecionar', EquipeController::class . ':getAlunosSemEquipe');
+    $app->post('/equipe/cadastrar', EquipeController::class . ':insertEquipe');
+    $app->put('/equipe/editar', EquipeController::class . ':updateEquipe');
+    $app->delete('/equipe/apagar', EquipeController::class . ':getOutEquipe');
 });
 
 $app->run();

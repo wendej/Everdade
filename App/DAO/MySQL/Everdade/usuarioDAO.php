@@ -11,7 +11,6 @@ class UsuarioDAO extends Conexao
 	{
 		parent::__construct();
 	}
-
 	public function insereUsuario(UsuarioModel $usuario): void
 	{
         $statement = $this->pdo
@@ -32,7 +31,6 @@ class UsuarioDAO extends Conexao
             'email' => $usuario->getEmail()
         ]);
 	}
-
     public function logaUsuario(UsuarioModel $usuario)
     {
         $sql = "SELECT * 
@@ -44,14 +42,12 @@ class UsuarioDAO extends Conexao
 
         return $res->fetch(\PDO::FETCH_ASSOC);
     }
-
     public function selecionaMaiorId()
     {
         $queryId = "SELECT MAX(id_usuario) AS id FROM usuario";
         $id = $this->pdo->query($queryId);
         return $id->fetch(\PDO::FETCH_ASSOC);
     }
-
     public function insereAluno($idCurso, $idUsuario)
     {
        $statement = $this->pdo
@@ -66,20 +62,17 @@ class UsuarioDAO extends Conexao
             'usuario_id_usuario1' => $idUsuario
         ]);
     }
-
     public function insereProfessor($idUsuario)
     {
-         $statement = $this->pdo
+        $statement = $this->pdo
             ->prepare("INSERT INTO professor VALUES(
                 null,
                 :usuario_id_usuario             
             );");
-
         $statement->execute([
             'usuario_id_usuario' => $idUsuario
         ]);
     }
-
     public function validaLoginUsuario(UsuarioModel $usuario)
     {
         $sql = "SELECT * 
@@ -89,5 +82,11 @@ class UsuarioDAO extends Conexao
         $res = $this->pdo->query($sql);
 
         return $res->fetch(\PDO::FETCH_ASSOC);
+    }
+    public function selecionaTipoUsuario($idUsuario)
+    {
+        $queryTipo = "SELECT tipo FROM usuario WHERE id_usuario = ".$idUsuario;
+        $tipo = $this->pdo->query($queryTipo);
+        return $tipo->fetch(\PDO::FETCH_ASSOC);
     }
 }
