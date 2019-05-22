@@ -31,6 +31,12 @@ class UsuarioDAO extends Conexao
             'email' => $usuario->getEmail()
         ]);
 	}
+    public function selecionaAluno($idUsuario)
+    {
+        $queryId = "SELECT id_aluno FROM aluno WHERE usuario_id_usuario1 = ".$idUsuario;
+        $id = $this->pdo->query($queryId);
+        return $id->fetch(\PDO::FETCH_ASSOC);
+    }
     public function logaUsuario(UsuarioModel $usuario)
     {
         $sql = "SELECT * 

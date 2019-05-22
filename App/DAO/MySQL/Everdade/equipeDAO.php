@@ -11,7 +11,6 @@ class EquipeDAO extends Conexao
 	{
 		parent::__construct();
 	}
-
     public function selecionaTodasEquipesPorJf($idJf)
     {
         $equipes = $this->pdo
@@ -28,15 +27,29 @@ class EquipeDAO extends Conexao
             ->query("SELECT equipe.tamanho,equipe.id_lider,equipe.id_equipe
                     FROM equipe
                     INNER JOIN equipe_has_julgamento_de_fatos ON equipe.id_equipe = equipe_has_julgamento_de_fatos.equipe_id_equipe
+                    INNER JOIN aluno_has_equipe ON aluno_has_equipe.equipe_id_equipe = equipe.id_equipe
+                    WHERE aluno_has_equipe.aluno_id_aluno = ".$idAluno." 
+                    AND equipe_has_julgamento_de_fatos.julgamento_de_fatos_id_jf = ".$idJf.";")
+            ->fetchAll(\PDO::FETCH_ASSOC);
+        return $equipes;
+    }
+    public function selecionaEquipePorJf($idJf)
+    {
+        $equipes = $this->pdo
+            ->query("SELECT equipe.tamanho,equipe.id_lider,equipe.id_equipe
+                    FROM equipe
+                    INNER JOIN equipe_has_julgamento_de_fatos ON equipe.id_equipe = equipe_has_julgamento_de_fatos.equipe_id_equipe
                     WHERE equipe_has_julgamento_de_fatos.julgamento_de_fatos_id_jf = ".$idJf.";")
             ->fetchAll(\PDO::FETCH_ASSOC);
         return $equipes;
     }
-    public function selecionaTodosAlunosPorEquipes($idEquipe)
+    public function selecionaTodosAlunosPorEquipe($idEquipe)
     {
         $alunos = $this->pdo
-            ->query("SELECT aluno_id_aluno
+            ->query("SELECT aluno.id_aluno, usuario.nome
                     FROM aluno_has_equipe
+                    INNER JOIN aluno ON aluno_has_equipe.aluno_id_aluno = aluno.id_aluno
+                    INNER JOIN usuario ON aluno.usuario_id_usuario1 = usuario.id_usuario
                     WHERE equipe_id_equipe = ".$idEquipe.";")
             ->fetchAll(\PDO::FETCH_ASSOC);
         return $alunos;
@@ -57,6 +70,12 @@ class EquipeDAO extends Conexao
             ->fetchAll(\PDO::FETCH_ASSOC);
         return $alunos;
     }
+    public function selecionaMaiorIdEquipe()
+    {
+        $queryId = "SELECT MAX(id_equipe) AS id FROM equipe";
+        $id = $this->pdo->query($queryId);
+        return $id->fetch(\PDO::FETCH_ASSOC);
+    }
     public function selecionaLiderEquipe($idEquipe)
     {
         $lider = $this->pdo
@@ -65,6 +84,71 @@ class EquipeDAO extends Conexao
                     WHERE id_equipe = ".$idEquipe)
             ->fetchAll(\PDO::FETCH_ASSOC);
         return $lider[0];
+    }
+    public function insereEquipe($data, $idLider): void
+    {
+        $equipe = $this->pdo
+            ->prepare("INSERT INTO equipe VALUES(
+                null,
+                :nome,
+                :tamanho,
+                :id_lider,
+                :julgamento_de_fatos_turma_id_turma
+            );");
+
+        $equipe->execute([
+            'nome' => $data['nome'],
+            'tamanho' => $data['tamanho'],
+            'id_lider' => $idLider,
+            'julgamento_de_fatos_turma_id_turma' => $data['idTurma'],
+        ]);
+
+        $idEquipe = $this->selecionaMaiorIdEquipe();
+
+        $equipeJf = $this->pdo
+            ->prepare("INSERT INTO equipe_has_julgamento_de_fatos VALUES(
+                :equipe_id_equipe,
+                :equipe_id_lider,
+                :julgamento_de_fatos_id_jf
+            );");
+
+        $equipeJf->execute([
+            'equipe_id_equipe' => $idEquipe['id'],
+            'equipe_id_lider' => $idLider,
+            'julgamento_de_fatos_id_jf' => $data['idJf']
+        ]);
+
+        $equipeAluno = $this->pdo
+            ->prepare("INSERT INTO aluno_has_equipe VALUES(
+                :aluno_id_aluno,
+                :aluno_usuario_id_usuario,
+                :aluno_id_lider,
+                :equipe_id_equipe
+            );");
+
+        $equipeAluno->execute([
+            'aluno_id_aluno' => $idLider,
+            'aluno_usuario_id_usuario' => $data['idLider'],
+            'aluno_id_lider' => $idLider,
+            'equipe_id_equipe' => $idEquipe['id']
+        ]);
+    }
+    public function insereAlunoEquipe($idAluno, $idUsuario, $idLider, $idEquipe)
+    {
+        $equipeAluno = $this->pdo
+            ->prepare("INSERT INTO aluno_has_equipe VALUES(
+                :aluno_id_aluno,
+                :aluno_usuario_id_usuario,
+                :aluno_id_lider,
+                :equipe_id_equipe
+            );");
+
+        $equipeAluno->execute([
+            'aluno_id_aluno' => $idAluno,
+            'aluno_usuario_id_usuario' => $idUsuario,
+            'aluno_id_lider' => $idLider,
+            'equipe_id_equipe' => $idEquipe
+        ]);
     }
     public function deletaEquipe($idEquipe): void
     {
