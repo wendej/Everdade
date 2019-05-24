@@ -5,6 +5,9 @@ namespace App\Controllers;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use App\DAO\MySQL\Everdade\jfDAO;
+use App\DAO\MySQL\Everdade\equipeDAO;
+use App\DAO\MySQL\Everdade\turmaDAO;
+use App\DAO\MySQL\Everdade\usuarioDAO;
 use App\Model\MySQL\Everdade\JfModel;
 
 final class jfController
@@ -13,9 +16,12 @@ final class jfController
 	public function getJf(Request $request, Response $response, array $args): Response
 	{
 		$jfDAO = New jfDAO();
+		$equipeDAO = New equipeDAO();
+		$usuarioDAO = New usuarioDAO();
+
 		$data = $request->getQueryParams();
+
 		$jf = $jfDAO->selecionaJf($data['idJf']);
-		$fatosJf = $jfDAO->selecionaFatosJf($data['idJf']);
 
 		if (empty($jf)) {
 			$response = $response->withStatus(403);
@@ -23,7 +29,38 @@ final class jfController
 				'message' => 'JF não encontrado'
 			]);
 		} else {
-			$response = $response->withJson(['jf' => $jf, 'fatos' => $fatosJf]);
+
+			$fatosJf = $jfDAO->selecionaFatosJf($data['idJf']);
+
+			$tipoUsuario = $usuarioDAO->selecionaTipoUsuario($data['idUsuario']);
+
+			if ($tipoUsuario['tipo'] == 'aluno') {
+				$idAluno = $usuarioDAO->selecionaAluno($data['idUsuario']);
+				$equipeAluno = $equipeDAO->selecionaEquipePorAlunoEJf($data['idJf'], $idAluno['id_aluno']);
+				$alunosEquipe = $equipeDAO->selecionaTodosAlunosPorEquipe($equipeAluno[0]['id_equipe']);
+				$response = $response->withJson([
+					'jf' => $jf, 'fatos' => $fatosJf, 'equipe' => $equipeAluno, 'alunos' => $alunosEquipe
+				]);
+			} elseif ($tipoUsuario['tipo'] == 'professor'){
+				$equipes = $equipeDAO->selecionaEquipePorJf($data['idJf']);
+				$equipesAlunos = array();
+				$contador = 0;
+				foreach ($equipes as $equipe) {
+					$equipesAlunos[$contador] = array(
+						'equipe' => $equipe,
+						'alunos' => $equipeDAO->selecionaTodosAlunosPorEquipe($equipe['id_equipe'])
+					);
+					$contador++;
+				}
+				$response = $response->withJson([
+					'jf' => $jf, 'fatos' => $fatosJf, 'equipes' => $equipesAlunos
+				]);
+			} else {
+				$response = $response->withStatus(403);
+				$response = $response->withJson([
+					'message' => 'Usuário não encontrado'
+				]);
+			}
 		}
 
 		return $response;
@@ -52,7 +89,7 @@ final class jfController
 		$response = $response->withJson([
 			'message' => 'JF cadastrado com sucesso'
 		]);
- 
+
 		return $response;
 	}
 
