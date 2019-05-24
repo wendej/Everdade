@@ -150,4 +150,30 @@ final class equipeController
 
 		return $response;
 	}
+
+	public function insertFatoEquipe(Request $request, Response $response, array $args): Response
+	{
+		$equipeDAO = new equipeDAO();
+		$usuarioDAO = new usuarioDAO();
+
+		$data = $request->getParsedBody();
+		$idLider = $usuarioDAO->selecionaAluno($data['idUsuario']);
+
+		foreach ($data['respostas'] as $resposta) {
+			$equipeDAO->insereFatoEquipe($data, $resposta, $idLider);
+		}
+
+		// $equipeDAO->insereEquipe($data, $idLider['id_aluno']);
+		// $idEquipe = $equipeDAO->selecionaMaiorIdEquipe();
+		
+		// foreach ($data['alunos'] as $usuario) {
+		// 	$idAluno = $usuarioDAO->selecionaAluno($usuario);
+		// 	$equipeDAO->insereAlunoEquipe($idAluno['id_aluno'], $usuario, $idLider['id_aluno'], $idEquipe['id']);
+		// }
+		// $response = $response->withJson([
+		// 	'message' => 'Equipe gravada com sucesso!'
+		// ]);
+
+		return $response;
+	}
 }

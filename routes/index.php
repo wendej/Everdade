@@ -60,6 +60,7 @@ $app->group('', function() use ($app) {
     $app->get('/equipe', EquipeController::class . ':getEquipe');
     $app->get('/equipe/selecionar', EquipeController::class . ':getAlunosSemEquipe');
     $app->post('/equipe/cadastrar', EquipeController::class . ':insertEquipe');
+    $app->post('/equipe/fato', EquipeController::class . ':insertFatoEquipe');
     $app->put('/equipe/editar', EquipeController::class . ':updateEquipe');
     $app->delete('/equipe/apagar', EquipeController::class . ':getOutEquipe');
 });
