@@ -129,13 +129,17 @@ final class equipeController
 			]);
 		} elseif ($tipoUsuario['tipo'] == 'professor'){
 			$equipes = $equipeDAO->selecionaEquipePorJf($data['idJf']);
-			$alunos = array();
+			$equipesAlunos = array();
 			$contador = 0;
 			foreach ($equipes as $equipe) {
-				array_push($alunos, $equipeDAO->selecionaTodosAlunosPorEquipe($equipe['id_equipe']));
+				$equipesAlunos[$contador] = array(
+					'equipe' => $equipe,
+					'alunos' => $equipeDAO->selecionaTodosAlunosPorEquipe($equipe['id_equipe'])
+				);
+				$contador++;
 			}
 			$response = $response->withJson([
-				'equipe' => $equipes, 'alunos' => $alunos
+				$equipesAlunos
 			]);
 		} else {
 			$response = $response->withStatus(403);
