@@ -93,7 +93,7 @@ final class equipeController
 	{
 		$equipeDAO = New equipeDAO();
 
-		$data = $request->getParsedBody();
+		$data = $request->getQueryParams();
 		$idLider = $equipeDAO->selecionaLiderEquipe($data['idEquipe']);
 		
 		if ($idLider['id_lider'] == $data['idAluno']) {
