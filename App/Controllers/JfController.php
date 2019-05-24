@@ -41,13 +41,13 @@ final class jfController
 				$contador = 0;
 
 				$equipeAluno = $equipeDAO->selecionaEquipePorAlunoEJf($data['idJf'], $idAluno['id_aluno']);
-				$alunosEquipe = $equipeDAO->selecionaTodosAlunosPorEquipe($equipeAluno[0]['id_equipe']);
-
-				$result[$contador] = array(
-					'equipe' => $equipeAluno,
-					'alunos' => $alunosEquipe
-				);
-				
+				if (!empty($equipeAluno)) {
+					$alunosEquipe = $equipeDAO->selecionaTodosAlunosPorEquipe($equipeAluno[0]['id_equipe']);
+					$result[$contador] = array(
+						'equipe' => $equipeAluno,
+						'alunos' => $alunosEquipe
+					);
+				}
 				$response = $response->withJson([
 					'jf' => $jf, 'fatos' => $fatosJf, 'equipes' => $result
 				]);

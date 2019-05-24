@@ -186,4 +186,21 @@ class EquipeDAO extends Conexao
             'aluno_id_aluno' => $idAluno,
         ]);
     }
+    public function insereAlunoEquipe($data, $resposta, $idLider)
+    {
+        $fato = $this->pdo
+            ->prepare("INSERT INTO equipe_has_fato VALUES(
+                :aluno_id_aluno,
+                :aluno_usuario_id_usuario,
+                :aluno_id_lider,
+                :equipe_id_equipe
+            );");
+
+        $equipeAluno->execute([
+            'aluno_id_aluno' => $idAluno,
+            'aluno_usuario_id_usuario' => $idUsuario,
+            'aluno_id_lider' => $idLider,
+            'equipe_id_equipe' => $idEquipe
+        ]);
+    }
 }
