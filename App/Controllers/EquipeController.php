@@ -15,10 +15,16 @@ final class equipeController
 	public function getAlunosSemEquipe(Request $request, Response $response, array $args): Response
 	{
 		$equipeDAO = New equipeDAO();
-
+		$usuarioDAO = new usuarioDAO();
 		$data = $request->getQueryParams();
-
-		$alunos = $equipeDAO->selecionaTodosAlunosSemEquipeDoJf($data['idTurma'], $data['idJf']);
+		$idAluno= $usuarioDAO->selecionaAluno($data['idUsuario']);
+		$alunosResult = $equipeDAO->selecionaTodosAlunosSemEquipeDoJf($data['idTurma'], $data['idJf']);
+		$alunos = array();
+		foreach ($alunosResult as $value) {
+			if ($value['id_aluno'] != $idAluno['id_aluno']) {
+				array_push($alunos, $value);
+			}
+		}
 		if (empty($alunos)) {
 			$response = $response->withStatus(403);
 			$response = $response->withJson([
@@ -38,28 +44,18 @@ final class equipeController
 
 		$data = $request->getParsedBody();
 
-		// if (($data['tamanho'] - 1) > count($data['alunos'])) {
+		$idLider = $usuarioDAO->selecionaAluno($data['idLider']);
 
-			$alunosSemEquipeNoJf = $equipeDAO->selecionaTodosAlunosSemEquipeDoJf($data['idTurma'], $data['idJf']);
-			$idLider = $usuarioDAO->selecionaAluno($data['idLider']);
-
-			$equipeDAO->insereEquipe($data, $idLider['id_aluno']);
-			$idEquipe = $equipeDAO->selecionaMaiorIdEquipe();
-			
-			foreach ($data['alunos'] as $usuario) {
-				$idAluno = $usuarioDAO->selecionaAluno($usuario);
-				$equipeDAO->insereAlunoEquipe($idAluno['id_aluno'], $usuario, $idLider['id_aluno'], $idEquipe['id']);
-			}
-			$response = $response->withJson([
-				'message' => 'Equipe gravada com sucesso!'
-			]);
-
-		// } else {
-		// 	$response = $response->withStatus(403);
-		// 	$response = $response->withJson([
-		// 		'message' => 'Quantidade de alunos maior que a quantidade permitida da equipe.'
-		// 	]);
-		// }
+		$equipeDAO->insereEquipe($data, $idLider['id_aluno']);
+		$idEquipe = $equipeDAO->selecionaMaiorIdEquipe();
+		
+		foreach ($data['alunos'] as $usuario) {
+			$idAluno = $usuarioDAO->selecionaAluno($usuario);
+			$equipeDAO->insereAlunoEquipe($idAluno['id_aluno'], $usuario, $idLider['id_aluno'], $idEquipe['id']);
+		}
+		$response = $response->withJson([
+			'message' => 'Equipe gravada com sucesso!'
+		]);
 
 		return $response;
 	}
@@ -96,14 +92,14 @@ final class equipeController
 		$data = $request->getQueryParams();
 		$idLider = $equipeDAO->selecionaLiderEquipe($data['idEquipe']);
 		
-		if ($idLider['id_lider'] == $data['idAluno']) {
+		if ($idLider['id_lider'] == $data['idUsuario']) {
 			$equipeDAO->deletaEquipe($data['idEquipe']);
 			$response = $response->withStatus(200);
 			$response = $response->withJson([
 				'message' => 'Equipe Deletada com sucesso'
 			]);
 		} else {
-			$equipeDAO->deletaAlunoEquipe($data['idEquipe'], $data['idAluno']);
+			$equipeDAO->deletaAlunoEquipe($data['idEquipe'], $data['idUsuario']);
 			$response = $response->withStatus(200);
 			$response = $response->withJson([
 				'message' => 'O aluno não faz mais parte dessa equipe'
@@ -158,21 +154,19 @@ final class equipeController
 
 		$data = $request->getParsedBody();
 		$idLider = $usuarioDAO->selecionaAluno($data['idUsuario']);
-
-		foreach ($data['respostas'] as $resposta) {
-			$equipeDAO->insereFatoEquipe($data, $resposta, $idLider);
+		$idEquipe = $equipeDAO->selecionaEquipePorAlunoEJf($data['idJf'], $data['idUsuario']);
+		if (!empty($idEquipe)) {
+			foreach ($data['respostas'] as $resposta) {
+				$equipeDAO->insereFatoEquipe($idEquipe[0]['id_equipe'], $resposta, $idLider['id_aluno']);
+			}
+			$response = $response->withJson([
+		 		'message' => 'Respostas gravadas com sucesso!'
+		 	]);
+		} else {
+			$response = $response->withJson([
+		 		'message' => 'Equipe não encontrada!'
+		 	]);
 		}
-
-		// $equipeDAO->insereEquipe($data, $idLider['id_aluno']);
-		// $idEquipe = $equipeDAO->selecionaMaiorIdEquipe();
-		
-		// foreach ($data['alunos'] as $usuario) {
-		// 	$idAluno = $usuarioDAO->selecionaAluno($usuario);
-		// 	$equipeDAO->insereAlunoEquipe($idAluno['id_aluno'], $usuario, $idLider['id_aluno'], $idEquipe['id']);
-		// }
-		// $response = $response->withJson([
-		// 	'message' => 'Equipe gravada com sucesso!'
-		// ]);
 
 		return $response;
 	}
