@@ -36,11 +36,22 @@ final class jfController
 
 			if ($tipoUsuario['tipo'] == 'aluno') {
 				$idAluno = $usuarioDAO->selecionaAluno($data['idUsuario']);
+
+				$result = array();
+				$contador = 0;
+
 				$equipeAluno = $equipeDAO->selecionaEquipePorAlunoEJf($data['idJf'], $idAluno['id_aluno']);
 				$alunosEquipe = $equipeDAO->selecionaTodosAlunosPorEquipe($equipeAluno[0]['id_equipe']);
+
+				$result[$contador] = array(
+					'equipe' => $equipeAluno,
+					'alunos' => $alunosEquipe
+				);
+				
 				$response = $response->withJson([
-					'jf' => $jf, 'fatos' => $fatosJf, 'equipe' => $equipeAluno, 'alunos' => $alunosEquipe
+					'jf' => $jf, 'fatos' => $fatosJf, 'equipes' => $result
 				]);
+
 			} elseif ($tipoUsuario['tipo'] == 'professor'){
 				$equipes = $equipeDAO->selecionaEquipePorJf($data['idJf']);
 				$equipesAlunos = array();
